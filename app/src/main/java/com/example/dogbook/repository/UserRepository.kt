@@ -6,15 +6,15 @@ import com.google.firebase.auth.FirebaseAuth
 
 class UserRepository {
 
-    private val userAuth = FirebaseAuth.getInstance()
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     fun registerUser(email: String, password: String): MutableLiveData<AuthUser>{
         val authUser = MutableLiveData<AuthUser>()
 
-        userAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { authTask ->
                 if (authTask.isSuccessful) {
-                    val currentUser = userAuth.currentUser
+                    val currentUser = firebaseAuth.currentUser
                     currentUser?.let {
                         it.getIdToken(true).addOnCompleteListener { tokenTask ->
                             if (tokenTask.isSuccessful) {
