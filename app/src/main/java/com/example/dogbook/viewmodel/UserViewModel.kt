@@ -1,12 +1,11 @@
 package com.example.dogbook.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.repository.UserRepository
 
-class UserViewModel(application: Application, private val repository: UserRepository): AndroidViewModel(application) {
+class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun registerUser(email: String, password: String): LiveData<AuthUser> {
         return repository.registerUser(email, password)
