@@ -8,8 +8,6 @@ import com.example.dogbook.repository.UserRepository
 
 class UserViewModel(application: Application, private val repository: UserRepository): AndroidViewModel(application) {
 
-    constructor(application: Application) : this(application, UserRepository())
-
     fun registerUser(email: String, password: String): LiveData<AuthUser> {
         return repository.registerUser(email, password)
     }

@@ -12,14 +12,18 @@ class UserRepository {
         val authUser = MutableLiveData<AuthUser>()
 
         userAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+            .addOnCompleteListener { authTask ->
+                if (authTask.isSuccessful) {
                     val currentUser = userAuth.currentUser
                     currentUser?.let {
-                        authUser.value = AuthUser(it.uid, it.email, null)
+                        it.getIdToken(true).addOnCompleteListener { tokenTask ->
+                            if (tokenTask.isSuccessful) {
+                                authUser.value = AuthUser(it.uid, it.email, null, tokenTask.result?.token)
+                            }
+                        }
                     }
                 } else {
-                    authUser.value = AuthUser(null, null, task.exception)
+                    authUser.value = AuthUser(null, null, authTask.exception, null)
                 }
             }
         return authUser
