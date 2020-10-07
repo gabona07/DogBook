@@ -2,10 +2,14 @@ package com.example.dogbook.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.dogbook.R
 import com.example.dogbook.viewmodel.UserViewModel
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,12 +28,13 @@ class MainActivity : AppCompatActivity() {
             val email = email.text.toString()
             val password = password.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                userViewModel.registerUser(email, password).observe(this, Observer{
-                    if (it.userId.isEmpty()) {
-                        println("Nem oké, nulla")
-                        //TODO error message/red
-                    } else {
-                        println(it)
+                userViewModel.registerUser(email, password).observe(this, Observer {
+                    when (it.authException) {
+                        null -> println("oké")
+                        is FirebaseAuthUserCollisionException -> Toast.makeText(this,"${it.authException.message}", Toast.LENGTH_SHORT).show()
+                        is FirebaseAuthInvalidCredentialsException -> Toast.makeText(this,"${it.authException.message}", Toast.LENGTH_SHORT).show()
+                        is FirebaseAuthWeakPasswordException -> Toast.makeText(this,"${it.authException.message}", Toast.LENGTH_SHORT).show()
+                        else -> Toast.makeText(this,"${it.authException.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
             }
