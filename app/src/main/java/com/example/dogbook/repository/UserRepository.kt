@@ -1,5 +1,6 @@
 package com.example.dogbook.repository
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.dogbook.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +20,7 @@ class UserRepository {
                         authUser.value = User(it.uid, it.email ?: "")
                     }
                 } else {
+                    Log.d("UserRepository", "registerUser: ${task.exception}")
                     authUser.value = User()
                 }
             }
