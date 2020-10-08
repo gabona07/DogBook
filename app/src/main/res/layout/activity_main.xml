@@ -4,7 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/peach"
+    android:backgroundTint="@color/peach"
     tools:context=".view.MainActivity">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:lottie_rawRes="@raw/bg"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"/>
 
     <LinearLayout
         android:id="@+id/registrationLayout"
@@ -41,7 +50,9 @@
             android:id="@+id/registerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_up" />
+            android:textSize="20sp"
+            android:text="@string/sign_up"
+            android:background="@drawable/button_shape"/>
 
     </LinearLayout>
 
