@@ -7,6 +7,7 @@
     tools:context=".view.MainActivity">
 
     <LinearLayout
+        android:id="@+id/registrationLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -20,26 +21,27 @@
             android:id="@+id/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/edit_text_margin"
             android:ems="10"
-            android:hint="Email"
-            android:inputType="textPersonName" />
+            android:hint="@string/email"
+            android:inputType="textWebEmailAddress"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/edit_text_margin"
             android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:autofillHints="" />
 
         <Button
             android:id="@+id/registerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="172dp"
-            android:text="Sign In" />
+            android:text="@string/sign_up" />
 
     </LinearLayout>
 
