@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/peach"
-    android:backgroundTint="@color/peach"
+    android:background="@drawable/bg"
     tools:context=".view.MainActivity">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:lottie_rawRes="@raw/bg"
-        app:lottie_loop="true"
-        app:lottie_autoPlay="true"/>
+
+    <ImageView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="8dp"
+        app:srcCompat="@drawable/title" />
 
     <LinearLayout
         android:id="@+id/registrationLayout"
@@ -24,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_margin="34dp">
 
         <EditText
             android:id="@+id/email"
@@ -53,6 +55,15 @@
             android:textSize="20sp"
             android:text="@string/sign_up"
             android:background="@drawable/button_shape"/>
+
+        <ImageButton
+            android:id="@+id/googleSignIn"
+            android:layout_width="@dimen/google_signin"
+            android:layout_height="@dimen/google_signin"
+            android:backgroundTint="@color/white"
+            android:onClick="loginWithGoogle"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/google" />
 
     </LinearLayout>
 
