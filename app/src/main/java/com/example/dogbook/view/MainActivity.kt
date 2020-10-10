@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.example.dogbook.R
 import com.example.dogbook.viewmodel.SharedPrefViewModel
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private val auth = FirebaseAuth.getInstance()
     companion object {
-        val RC_SIGN_IN = 101
+        const val RC_SIGN_IN = 101
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,14 +32,6 @@ class MainActivity : AppCompatActivity() {
         setupGoogleSignInOptions()
         registerButton.setOnClickListener { registerUser() }
         googleSignIn.setOnClickListener { loginWithGoogle()  }
-    }
-
-    private fun setupGoogleSignInOptions() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
     private fun registerUser() {
@@ -59,15 +50,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun signIn() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+    // TODO Refactor Google Sign-in
+    private fun setupGoogleSignInOptions() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // Result returned from launching the Intent from GoogleSignInApi
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -98,8 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun loginWithGoogle() {
-
+    private fun loginWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
