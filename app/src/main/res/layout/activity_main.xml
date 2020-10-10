@@ -8,6 +8,7 @@
     tools:context=".view.MainActivity">
 
 
+
     <ImageView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -61,7 +62,6 @@
             android:layout_width="@dimen/google_signin"
             android:layout_height="@dimen/google_signin"
             android:backgroundTint="@color/white"
-            android:onClick="loginWithGoogle"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/google" />
 
