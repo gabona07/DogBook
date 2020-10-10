@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#FAFAFA</color>
+    <color name="colorSecondary">#B3B6B7</color>
     <color name="peach">#e8a87c</color>
     <color name="white">#ffffff</color>
 </resources>
