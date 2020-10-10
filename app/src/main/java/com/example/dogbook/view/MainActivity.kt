@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val sharedPrefViewModel: SharedPrefViewModel by viewModel()
     private lateinit var googleSignInClient: GoogleSignInClient
     private val auth = FirebaseAuth.getInstance()
+
     companion object {
         const val RC_SIGN_IN = 101
     }
@@ -29,28 +30,34 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        userViewModel.getAuthUser().observe(this, {
+            println("Van User ${it.email}")
+        })
+
         setupGoogleSignInOptions()
+
         registerButton.setOnClickListener { registerUser() }
-        googleSignIn.setOnClickListener { loginWithGoogle()  }
+        googleSignIn.setOnClickListener { loginWithGoogle() }
+        loginButton.setOnClickListener { loginUser() }
+    }
+
+    private fun loginUser() {
+        val email = email.text.toString()
+        val password = password.text.toString()
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            userViewModel.loginUser(email, password)
+        }
     }
 
     private fun registerUser() {
         val email = email.text.toString()
         val password = password.text.toString()
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            userViewModel.registerUser(email, password).observe(this, { authUser ->
-                when (authUser.authException) {
-                    null -> sharedPrefViewModel.saveUserToken(authUser.userToken!!)
-                    is FirebaseAuthUserCollisionException -> Toast.makeText(this,"${authUser.authException.message}", Toast.LENGTH_SHORT).show()
-                    is FirebaseAuthInvalidCredentialsException -> Toast.makeText(this,"${authUser.authException.message}", Toast.LENGTH_SHORT).show()
-                    is FirebaseAuthWeakPasswordException -> Toast.makeText(this,"${authUser.authException.message}", Toast.LENGTH_SHORT).show()
-                    else -> Toast.makeText(this,"${authUser.authException.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
+            userViewModel.registerUser(email, password)
         }
     }
 
-    // TODO Refactor Google Sign-in
     private fun setupGoogleSignInOptions() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -91,7 +98,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
     }
-
 
     private fun loginWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
