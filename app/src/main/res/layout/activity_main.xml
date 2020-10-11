@@ -35,6 +35,26 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appName" />
+        
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/formOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/liquidImg">
+            
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/optionSignIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/option_sign_in"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/optionSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/option_sign_up"/>
+            
+        </com.google.android.material.tabs.TabLayout>
 
         <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/loginForm"
@@ -45,7 +65,7 @@
             android:paddingEnd="@dimen/login_form_padding_sides"
             android:paddingBottom="@dimen/login_form_padding_top_bottom"
             app:layoutDescription="@xml/login_form_scene"
-            app:layout_constraintTop_toBottomOf="@+id/liquidImg">
+            app:layout_constraintTop_toBottomOf="@+id/formOptions">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/loginEmailLayout"
@@ -115,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.3" />
+                app:layout_constraintGuide_percent="0.2" />
 
             <View
                 android:id="@+id/lineLeft"
