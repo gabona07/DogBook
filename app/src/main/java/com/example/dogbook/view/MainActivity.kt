@@ -1,5 +1,6 @@
 package com.example.dogbook.view
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.dogbook.R
@@ -57,7 +58,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun validateAuthUser(user: AuthUser) {
         when(user.authException) {
-            null -> println("Van User $user")
+            null -> {
+                val mainPageIntent = Intent(this, MainPageActivity::class.java)
+                startActivity(mainPageIntent)
+                finish()
+            }
             is FirebaseAuthInvalidCredentialsException -> {
                 loginEmailLayout.error = getString(R.string.error_failed_login)
                 hideLoginLoading()
