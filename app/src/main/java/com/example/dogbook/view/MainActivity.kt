@@ -1,19 +1,12 @@
 package com.example.dogbook.view
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.constraintlayout.motion.widget.MotionLayout
 import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
-import com.example.dogbook.viewmodel.SharedPrefViewModel
 import com.example.dogbook.viewmodel.UserViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -21,7 +14,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class MainActivity : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModel()
-    private val sharedPrefViewModel: SharedPrefViewModel by viewModel()
     private lateinit var googleSignInClient: GoogleSignInClient
     private val auth = FirebaseAuth.getInstance()
 
@@ -33,12 +25,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         loginForm.setTransitionListener(LoginTransitionListener)
-        userViewModel.getAuthUser().observe(this, {
+        userViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
 
 //        setupGoogleSignInOptions()
-
 //        googleSignIn.setOnClickListener { loginWithGoogle() }
         signInBtn.setOnClickListener { loginUser() }
 //        registerButton.setOnClickListener { registerUser() }
@@ -68,10 +59,10 @@ class MainActivity : AppCompatActivity() {
         when(user.authException) {
             null -> println("Van User $user")
             is FirebaseAuthInvalidCredentialsException -> {
-                loginEmailLayout.error = "Invalid Username or Password!"
+                loginEmailLayout.error = getString(R.string.error_failed_login)
                 hideLoginLoading()
             }
-            else -> println("Van User ${user.authException}")
+            else -> println("${user.authException}")
         }
     }
 

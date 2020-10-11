@@ -6,7 +6,11 @@ import com.example.dogbook.R
 
 object LoginTransitionListener : MotionLayout.TransitionListener {
 
-    override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+    override fun onTransitionStarted(motionLayout: MotionLayout?, p1: Int, p2: Int) {
+        motionLayout?.let {
+            val signInBtn = it.findViewById<Button>(R.id.signInBtn)
+            signInBtn.isClickable = false
+        }
     }
 
     override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
@@ -21,7 +25,8 @@ object LoginTransitionListener : MotionLayout.TransitionListener {
                 it.transitionToEnd()
             }
             if (currentState == R.id.start) {
-                signInBtn.text = "Sign in"
+                signInBtn.setText(R.string.sign_in_btn_text)
+                signInBtn.isClickable = true
             }
         }
     }

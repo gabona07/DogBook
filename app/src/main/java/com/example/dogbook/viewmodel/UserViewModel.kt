@@ -15,7 +15,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         repository.loginUserWithEmailAndPassword(email, password)
     }
 
-    fun getAuthUser(): LiveData<AuthUser> {
+    fun getAuthUserData(): LiveData<AuthUser> {
         return repository.getAuthUser()
     }
 }
