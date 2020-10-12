@@ -22,4 +22,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     fun getAuthToken(): String? {
         return repository.getAuthToken()
     }
+
+    fun saveUserTokenToSharedPrefs() {
+        repository.saveUserTokenToSharedPrefs()
+    }
 }

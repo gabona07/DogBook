@@ -15,7 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.*
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_auth.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class AuthActivity : AppCompatActivity() {
@@ -30,7 +30,7 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_auth)
         addFormOptionListener()
         loginForm.setTransitionListener(LoginTransitionListener)
         userViewModel.getAuthUserData().observe(this, {
@@ -84,9 +84,9 @@ class AuthActivity : AppCompatActivity() {
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
             registerPasswordLayout.error = "Passwords don't match."
-            registerPasswordConfirmLayout.error = " ";
+            registerPasswordConfirmLayout.error = " "
             if (registerPasswordConfirmLayout.childCount == 2) {
-                registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE;
+                registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
             }
         } else if (email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
             registerEmail.clearFocus()
@@ -99,6 +99,7 @@ class AuthActivity : AppCompatActivity() {
     private fun validateAuthUser(user: AuthUser) {
         when(user.authException) {
             null -> {
+                userViewModel.saveUserTokenToSharedPrefs()
                 val mainPageIntent = Intent(this, MainPageActivity::class.java)
                 startActivity(mainPageIntent)
                 finish()
@@ -113,9 +114,9 @@ class AuthActivity : AppCompatActivity() {
             }
             is FirebaseAuthWeakPasswordException -> {
                 registerPasswordLayout.error = getString(R.string.password_too_weak_error)
-                registerPasswordConfirmLayout.error = " ";
+                registerPasswordConfirmLayout.error = " "
                 if (registerPasswordConfirmLayout.childCount == 2) {
-                    registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE;
+                    registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
                 }
             }
             else -> println("${user.authException}")
@@ -160,7 +161,7 @@ class AuthActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("MainActivity", "signInWithCredential:success")
-                    val user = auth.currentUser
+                    auth.currentUser
                     val mainPageIntent = Intent(this, MainPageActivity::class.java)
                     startActivity(mainPageIntent)
                 } else {
