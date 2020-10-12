@@ -9,7 +9,10 @@ import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
 import com.example.dogbook.viewmodel.UserViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,10 +36,10 @@ class MainActivity : AppCompatActivity() {
         userViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
-//        setupGoogleSignInOptions()
-//        googleSignIn.setOnClickListener { loginWithGoogle() }
+        setupGoogleSignInOptions()
+        googleSingInBtn.setOnClickListener { loginWithGoogle() }
         signInBtn.setOnClickListener { loginUser() }
-//        registerButton.setOnClickListener { registerUser() }
+        signUpBtn.setOnClickListener { registerUser() }
     }
 
     private fun addFormOptionListener() {
@@ -73,9 +76,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val email = loginEmail.text.toString()
-        val password = loginPassword.text.toString()
-        if (email.isNotEmpty() && password.isNotEmpty()) {
+        val email = registerEmail.text.toString()
+        val password = registerPassword.text.toString()
+        val confirmPassword = registerPasswordConfirm.text.toString()
+        if (password != confirmPassword && email.isNotEmpty()) {
+            registerEmail.clearFocus()
+            registerPassword.clearFocus()
+            registerPasswordConfirm.clearFocus()
+            registerPasswordLayout.error = "Passwords don't match."
+            registerPasswordConfirmLayout.error = " ";
+            if (registerPasswordConfirmLayout.childCount == 2) {
+                registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE;
+            }
+        } else if (email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
+            registerEmail.clearFocus()
+            registerPassword.clearFocus()
+            registerPasswordConfirm.clearFocus()
             userViewModel.registerUser(email, password)
         }
     }
@@ -87,9 +103,20 @@ class MainActivity : AppCompatActivity() {
                 startActivity(mainPageIntent)
                 finish()
             }
+            is FirebaseAuthUserCollisionException -> {
+                registerEmailLayout.error = getString(R.string.email_error)
+            }
             is FirebaseAuthInvalidCredentialsException -> {
+                registerEmailLayout.error = getString(R.string.error_failed_login)
                 loginEmailLayout.error = getString(R.string.error_failed_login)
                 hideLoginLoading()
+            }
+            is FirebaseAuthWeakPasswordException -> {
+                registerPasswordLayout.error = getString(R.string.password_too_weak_error)
+                registerPasswordConfirmLayout.error = " ";
+                if (registerPasswordConfirmLayout.childCount == 2) {
+                    registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE;
+                }
             }
             else -> println("${user.authException}")
         }
@@ -100,49 +127,51 @@ class MainActivity : AppCompatActivity() {
         loginForm.transitionToEnd()
     }
 
-//    private fun setupGoogleSignInOptions() {
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build()
-//        googleSignInClient = GoogleSignIn.getClient(this, gso)
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        // Result returned from launching the Intent from GoogleSignInApi
-//        if (requestCode == RC_SIGN_IN) {
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-//            try {
-//                // Google Sign In was successful, authenticate with Firebase
-//                val account = task.getResult(ApiException::class.java)!!
-//                Log.d("MainActivity", "firebaseAuthWithGoogle:" + account.id)
-//                firebaseAuthWithGoogle(account.idToken!!)
-//            } catch (e: ApiException) {
-//                // Google Sign In failed, update UI appropriately
-//                Log.w("MainActivity", "Google sign in failed", e)
-//            }
-//        }
-//    }
-//
-//    private fun firebaseAuthWithGoogle(idToken: String) {
-//        val credential = GoogleAuthProvider.getCredential(idToken, null)
-//        auth.signInWithCredential(credential)
-//            .addOnCompleteListener(this) { task ->
-//                if (task.isSuccessful) {
-//                    // Sign in success, update UI with the signed-in user's information
-//                    Log.d("MainActivity", "signInWithCredential:success")
-//                    val user = auth.currentUser
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w("MainActivity", "signInWithCredential:failure", task.exception)
-//                }
-//            }
-//    }
-//
-//    private fun loginWithGoogle() {
-//        val signInIntent = googleSignInClient.signInIntent
-//        startActivityForResult(signInIntent, RC_SIGN_IN)
-//    }
+    private fun setupGoogleSignInOptions() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d("MainActivity", "firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("MainActivity", "Google sign in failed", e)
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("MainActivity", "signInWithCredential:success")
+                    val user = auth.currentUser
+                    val mainPageIntent = Intent(this, MainPageActivity::class.java)
+                    startActivity(mainPageIntent)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("MainActivity", "signInWithCredential:failure", task.exception)
+                }
+            }
+    }
+
+    private fun loginWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
 }
