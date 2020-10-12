@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.dogbook.model.AuthUser
 import com.google.firebase.auth.FirebaseAuth
 
-class UserRepository(sharedPref: SharedPreferences) {
+class UserRepository(private val sharedPref: SharedPreferences) {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val authUser = MutableLiveData<AuthUser>()
@@ -42,4 +42,7 @@ class UserRepository(sharedPref: SharedPreferences) {
         return this.authUser
     }
 
+    fun getAuthToken():String? {
+        return sharedPref.getString("AUTH_TOKEN", null)
+    }
 }

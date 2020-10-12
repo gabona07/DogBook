@@ -18,7 +18,7 @@ import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class AuthActivity : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModel()
     private lateinit var googleSignInClient: GoogleSignInClient

@@ -18,4 +18,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     fun getAuthUserData(): LiveData<AuthUser> {
         return repository.getAuthUser()
     }
+
+    fun getAuthToken(): String? {
+        return repository.getAuthToken()
+    }
 }

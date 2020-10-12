@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary"
     android:fillViewport="true"
     android:overScrollMode="never"
-    tools:context=".view.MainActivity">
+    tools:context=".view.AuthActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
