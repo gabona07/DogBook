@@ -3,16 +3,12 @@ package com.example.dogbook.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
 import com.example.dogbook.viewmodel.UserViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -87,7 +83,7 @@ class AuthActivity : AppCompatActivity() {
             registerEmail.clearFocus()
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
-            registerPasswordLayout.error = "Passwords don't match."
+            registerPasswordLayout.error = getString(R.string.error_password_mismatch)
             registerPasswordConfirmLayout.error = " "
             if (registerPasswordConfirmLayout.childCount == 2) {
                 registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
@@ -108,15 +104,15 @@ class AuthActivity : AppCompatActivity() {
                 finish()
             }
             is FirebaseAuthUserCollisionException -> {
-                registerEmailLayout.error = getString(R.string.email_error)
+                registerEmailLayout.error = getString(R.string.error_email_in_use)
             }
             is FirebaseAuthInvalidCredentialsException -> {
-                if (user.isNew) registerEmailLayout.error = getString(R.string.error_failed_login)
+                if (user.isNew) registerEmailLayout.error = getString(R.string.error_invalid_email)
                 else loginEmailLayout.error = getString(R.string.error_failed_login)
                 hideLoginLoading()
             }
             is FirebaseAuthWeakPasswordException -> {
-                registerPasswordLayout.error = getString(R.string.password_too_weak_error)
+                registerPasswordLayout.error = getString(R.string.error_password_too_weak)
                 registerPasswordConfirmLayout.error = " "
                 if (registerPasswordConfirmLayout.childCount == 2) {
                     registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
