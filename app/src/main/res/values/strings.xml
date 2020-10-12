@@ -11,4 +11,8 @@
     <string name="sign_up_btn_text">Sign Up</string>
     <string name="password_too_weak_error">Password is too weak.</string>
     <string name="email_error">Email is already in use.</string>
+    <string name="dog_s_name">Dog\'s name</string>
+    <string name="owner_s_name">Owner\'s name</string>
+    <string name="dog_s_personality">Dog\'s personality</string>
+    <string name="location">Location</string>
 </resources>

@@ -13,4 +13,5 @@
     <dimen name="btn_separator_margin">16dp</dimen>
     <dimen name="btn_separator_padding">10dp</dimen>
     <dimen name="google_btn_margin">16dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
 </resources>
