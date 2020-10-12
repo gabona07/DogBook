@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import com.example.dogbook.viewmodel.UserViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -13,13 +14,15 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Handler().postDelayed({
-            val authToken = userViewModel.getAuthToken()
-            if (authToken.isNullOrEmpty()) {
+        val currentUser = userViewModel.getCurrentUser()
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (currentUser == null) {
                 val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
+            } else {
+                val intent = Intent(this, MainPageActivity::class.java)
+                startActivity(intent)
             }
-            println("Hello ${authToken}")
         }, 2000)
     }
 }

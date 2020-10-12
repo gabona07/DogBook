@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.repository.UserRepository
+import com.google.firebase.auth.FirebaseUser
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -19,11 +20,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         return repository.getAuthUser()
     }
 
-    fun getAuthToken(): String? {
-        return repository.getAuthToken()
-    }
-
-    fun saveUserTokenToSharedPrefs() {
-        repository.saveUserTokenToSharedPrefs()
+    fun getCurrentUser(): FirebaseUser? {
+        return repository.getCurrentUser()
     }
 }

@@ -1,10 +1,10 @@
 package com.example.dogbook.repository
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import com.example.dogbook.model.AuthUser
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class UserRepository(private val sharedPref: SharedPreferences) {
 
@@ -43,14 +43,7 @@ class UserRepository(private val sharedPref: SharedPreferences) {
         return this.authUser
     }
 
-    fun getAuthToken():String? {
-        return sharedPref.getString("AUTH_TOKEN", null)
-    }
-
-    fun saveUserTokenToSharedPrefs() {
-        firebaseAuth.currentUser?.getIdToken(true)
-            ?.addOnCompleteListener {
-                sharedPref.edit().putString("AUTH_TOKEN", it.result?.token).apply()
-            }
+    fun getCurrentUser(): FirebaseUser? {
+        return firebaseAuth.currentUser
     }
 }

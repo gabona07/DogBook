@@ -99,7 +99,6 @@ class AuthActivity : AppCompatActivity() {
     private fun validateAuthUser(user: AuthUser) {
         when(user.authException) {
             null -> {
-                userViewModel.saveUserTokenToSharedPrefs()
                 val mainPageIntent = Intent(this, MainPageActivity::class.java)
                 startActivity(mainPageIntent)
                 finish()
