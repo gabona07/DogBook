@@ -2,6 +2,7 @@
     <string name="app_name">DogBook</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm password</string>
     <string name="sign_in_btn_text">Sign In</string>
     <string name="btn_separator_text">OR</string>
     <string name="error_failed_login">Invalid Username or Password!</string>

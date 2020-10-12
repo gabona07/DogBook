@@ -238,7 +238,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/registerPasswordValidateLayout"
+                android:id="@+id/registerPasswordConfirmLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -247,11 +247,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/registerPasswordLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/registerPasswordValidate"
+                    android:id="@+id/registerPasswordConfirm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="Password"
-                    android:hint="@string/password_hint"
+                    android:autofillHints="Confirm password"
+                    android:hint="@string/confirm_password_hint"
                     android:inputType="textPassword"
                     android:textColor="@color/colorAccent" />
 
@@ -267,7 +267,7 @@
                 android:textColor="@color/colorTextLight"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registerPasswordValidateLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/registerPasswordConfirmLayout" />
 
             <ProgressBar
                 android:id="@+id/registerAuthLoading"
