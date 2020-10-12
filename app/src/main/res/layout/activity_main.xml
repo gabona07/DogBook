@@ -93,7 +93,9 @@
                 android:layout_marginTop="@dimen/edit_text_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/loginGuideline">
+                app:layout_constraintTop_toBottomOf="@+id/loginGuideline"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/loginPassword"
@@ -224,7 +226,9 @@
                 android:layout_marginTop="@dimen/edit_text_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registerGuideline">
+                app:layout_constraintTop_toBottomOf="@+id/registerGuideline"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/registerPassword"
@@ -244,7 +248,9 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registerPasswordLayout">
+                app:layout_constraintTop_toBottomOf="@+id/registerPasswordLayout"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/registerPasswordConfirm"
