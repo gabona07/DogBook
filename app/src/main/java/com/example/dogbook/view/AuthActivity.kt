@@ -3,10 +3,12 @@ package com.example.dogbook.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
+import com.example.dogbook.transitionlistener.RegisterTransitionListener
 import com.example.dogbook.viewmodel.UserViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.tabs.TabLayout
@@ -34,6 +36,7 @@ class AuthActivity : AppCompatActivity() {
             formOptions.selectTab(formOptions.getTabAt(currentTabPosition))
         }
         loginForm.setTransitionListener(LoginTransitionListener)
+        registerForm.setTransitionListener(RegisterTransitionListener)
         userViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
@@ -76,8 +79,7 @@ class AuthActivity : AppCompatActivity() {
         if (userEmail.isNotEmpty() && userPassword.isNotEmpty()) {
             loginEmail.clearFocus()
             loginPassword.clearFocus()
-            loginForm.setTransition(R.id.start, R.id.LoginFormStateEnd)
-            loginForm.transitionToEnd()
+            loginForm.transitionToState(R.id.loginFormStateEnd)
             userViewModel.loginUser(userEmail, userPassword)
         }
     }
@@ -102,6 +104,7 @@ class AuthActivity : AppCompatActivity() {
             registerEmail.clearFocus()
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
+            registerForm.transitionToState(R.id.registerFormStateEnd)
             userViewModel.registerUser(email, password)
         }
     }
@@ -115,11 +118,17 @@ class AuthActivity : AppCompatActivity() {
             }
             is FirebaseAuthUserCollisionException -> {
                 registerEmailLayout.error = getString(R.string.error_email_in_use)
+                hideRegisterLoading()
             }
             is FirebaseAuthInvalidCredentialsException -> {
-                if (user.isNew) registerEmailLayout.error = getString(R.string.error_invalid_email)
-                else loginEmailLayout.error = getString(R.string.error_failed_login)
-                hideLoginLoading()
+                if (user.isNew) {
+                    registerEmailLayout.error = getString(R.string.error_invalid_email)
+                    hideRegisterLoading()
+                }
+                else {
+                    loginEmailLayout.error = getString(R.string.error_failed_login)
+                    hideLoginLoading()
+                }
             }
             is FirebaseAuthWeakPasswordException -> {
                 registerPasswordLayout.error = getString(R.string.error_password_too_weak)
@@ -127,14 +136,20 @@ class AuthActivity : AppCompatActivity() {
                 if (registerPasswordConfirmLayout.childCount == 2) {
                     registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
                 }
+                hideRegisterLoading()
             }
-            else -> println("${user.authException}")
+            else -> Log.d("AuthActivity", "validateAuthUser: ${user.authException}")
         }
     }
 
     private fun hideLoginLoading() {
-        loginForm.setTransition(R.id.LoginBtnStateEnd, R.id.start)
+        loginForm.setTransition(R.id.loginBtnStateEnd, R.id.start)
         loginForm.transitionToEnd()
+    }
+
+    private fun hideRegisterLoading() {
+        registerForm.setTransition(R.id.registerBtnStateEnd, R.id.start)
+        registerForm.transitionToEnd()
     }
 
 //    private fun setupGoogleSignInOptions() {
