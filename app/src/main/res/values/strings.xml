@@ -7,4 +7,5 @@
     <string name="error_failed_login">Invalid Username or Password!</string>
     <string name="option_sign_in">Sign in</string>
     <string name="option_sign_up">Sign Up</string>
+    <string name="sign_up_btn_text">Sign Up</string>
 </resources>

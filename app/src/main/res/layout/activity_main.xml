@@ -34,36 +34,34 @@
             android:background="@drawable/ic_wave"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appName" />
-        
+            app:layout_constraintTop_toBottomOf="@id/appName" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/formOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/liquidImg">
-            
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/optionSignIn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/option_sign_in"/>
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/optionSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/option_sign_up"/>
-            
+                android:text="@string/option_sign_in" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/option_sign_up" />
+
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/loginForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/login_form_padding_sides"
-            android:paddingTop="@dimen/login_form_padding_top_bottom"
-            android:paddingEnd="@dimen/login_form_padding_sides"
-            android:paddingBottom="@dimen/login_form_padding_top_bottom"
+            android:paddingStart="@dimen/auth_form_padding_sides"
+            android:paddingTop="@dimen/auth_form_padding_top_bottom"
+            android:paddingEnd="@dimen/auth_form_padding_sides"
+            android:paddingBottom="@dimen/auth_form_padding_top_bottom"
             app:layoutDescription="@xml/login_form_scene"
             app:layout_constraintTop_toBottomOf="@+id/formOptions">
 
@@ -179,6 +177,109 @@
                 app:layout_constraintTop_toBottomOf="@+id/buttonSeparator" />
 
         </androidx.constraintlayout.motion.widget.MotionLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/registerForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/auth_form_padding_sides"
+            android:paddingTop="@dimen/auth_form_padding_top_bottom"
+            android:paddingEnd="@dimen/auth_form_padding_sides"
+            android:paddingBottom="@dimen/auth_form_padding_top_bottom"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/formOptions">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registerEmailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edit_text_margin"
+                app:layout_constraintBottom_toTopOf="@id/registerGuideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/registerEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Email"
+                    android:hint="@string/email_hint"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/colorAccent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/registerGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.2" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registerPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edit_text_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/registerGuideline">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/registerPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Password"
+                    android:hint="@string/password_hint"
+                    android:inputType="textPassword"
+                    android:textColor="@color/colorAccent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registerPasswordValidateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/registerPasswordLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/registerPasswordValidate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Password"
+                    android:hint="@string/password_hint"
+                    android:inputType="textPassword"
+                    android:textColor="@color/colorAccent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/signUpBtn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/sign_in_btn_height"
+                android:layout_marginTop="@dimen/sign_in_btn_margin_top"
+                android:background="@drawable/auth_button_ripple"
+                android:text="@string/sign_up_btn_text"
+                android:textColor="@color/colorTextLight"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/registerPasswordValidateLayout" />
+
+            <ProgressBar
+                android:id="@+id/registerAuthLoading"
+                android:layout_width="@dimen/auth_progressbar_size"
+                android:layout_height="@dimen/auth_progressbar_size"
+                android:alpha="0"
+                android:indeterminateDrawable="@drawable/auth_progressbar"
+                app:layout_constraintBottom_toBottomOf="@+id/signUpBtn"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/signUpBtn" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -3,11 +3,14 @@ package com.example.dogbook.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
 import com.example.dogbook.viewmodel.UserViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -25,15 +28,36 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        addFormOptionListener()
         loginForm.setTransitionListener(LoginTransitionListener)
         userViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
-
 //        setupGoogleSignInOptions()
 //        googleSignIn.setOnClickListener { loginWithGoogle() }
         signInBtn.setOnClickListener { loginUser() }
 //        registerButton.setOnClickListener { registerUser() }
+    }
+
+    private fun addFormOptionListener() {
+        formOptions.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab?.text) {
+                    getString(R.string.option_sign_in) -> loginForm.visibility = View.VISIBLE
+                    getString(R.string.option_sign_up) -> registerForm.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                when(tab?.text) {
+                    getString(R.string.option_sign_in) -> loginForm.visibility = View.GONE
+                    getString(R.string.option_sign_up) -> registerForm.visibility = View.GONE
+                }
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+        })
     }
 
     private fun loginUser() {
