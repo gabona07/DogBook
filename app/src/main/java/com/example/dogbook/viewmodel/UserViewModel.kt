@@ -2,8 +2,8 @@ package com.example.dogbook.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.dogbook.model.AuthUser
 import com.example.dogbook.repository.UserRepository
-import com.google.firebase.auth.FirebaseUser
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -15,7 +15,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         repository.loginUserWithEmailAndPassword(email, password)
     }
 
-    fun getAuthUser(): LiveData<FirebaseUser> {
+    fun getAuthUserData(): LiveData<AuthUser> {
         return repository.getAuthUser()
     }
 }
