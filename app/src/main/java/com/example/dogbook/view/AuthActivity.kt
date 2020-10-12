@@ -21,6 +21,7 @@ class AuthActivity : AppCompatActivity() {
 //    private val auth = FirebaseAuth.getInstance()
 
     companion object {
+        private const val TAB_INDEX_KEY = "TAB_INDEX_KEY"
         const val RC_SIGN_IN = 101
     }
 
@@ -28,6 +29,10 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         addFormOptionListener()
+        savedInstanceState?.let {
+            val currentTabPosition = it.getInt(TAB_INDEX_KEY)
+            formOptions.selectTab(formOptions.getTabAt(currentTabPosition))
+        }
         loginForm.setTransitionListener(LoginTransitionListener)
         userViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
@@ -36,6 +41,11 @@ class AuthActivity : AppCompatActivity() {
 //        googleSingInBtn.setOnClickListener { loginWithGoogle() }
         signInBtn.setOnClickListener { loginUser() }
         signUpBtn.setOnClickListener { registerUser() }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(TAB_INDEX_KEY, formOptions.selectedTabPosition)
     }
 
     private fun addFormOptionListener() {
