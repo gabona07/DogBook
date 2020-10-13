@@ -9,7 +9,7 @@ import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
 import com.example.dogbook.transitionlistener.RegisterTransitionListener
-import com.example.dogbook.viewmodel.UserViewModel
+import com.example.dogbook.viewmodel.AuthViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
@@ -21,7 +21,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class AuthActivity : AppCompatActivity() {
 
-    private val userViewModel: UserViewModel by viewModel()
+    private val authViewModel: AuthViewModel by viewModel()
     private val googleSignInClient: GoogleSignInClient by inject()
 
     companion object {
@@ -39,7 +39,7 @@ class AuthActivity : AppCompatActivity() {
         }
         loginForm.setTransitionListener(LoginTransitionListener)
         registerForm.setTransitionListener(RegisterTransitionListener)
-        userViewModel.getAuthUserData().observe(this, {
+        authViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
         signInBtn.setOnClickListener { loginUser() }
@@ -59,11 +59,11 @@ class AuthActivity : AppCompatActivity() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 account?.let {
-                    userViewModel.loginWithGoogle(it.idToken ?: "")
+                    authViewModel.loginWithGoogle(it.idToken)
                 }
             } catch (e: ApiException) {
-                Log.d("kaka", "onActivityResult: $e")
                 // TODO Display google login error
+                Log.d("AuthActivity", "onActivityResult: Google login failed: $e")
             }
         }
 
@@ -98,7 +98,7 @@ class AuthActivity : AppCompatActivity() {
             loginEmail.clearFocus()
             loginPassword.clearFocus()
             loginForm.transitionToState(R.id.loginFormStateEnd)
-            userViewModel.loginUser(userEmail, userPassword)
+            authViewModel.loginUser(userEmail, userPassword)
         }
     }
 
@@ -128,7 +128,7 @@ class AuthActivity : AppCompatActivity() {
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
             registerForm.transitionToState(R.id.registerFormStateEnd)
-            userViewModel.registerUser(email, password)
+            authViewModel.registerUser(email, password)
         }
     }
 
@@ -174,23 +174,4 @@ class AuthActivity : AppCompatActivity() {
         registerForm.setTransition(R.id.registerBtnStateEnd, R.id.start)
         registerForm.transitionToEnd()
     }
-
-//
-//    private fun firebaseAuthWithGoogle(idToken: String) {
-//        val credential = GoogleAuthProvider.getCredential(idToken, null)
-//        auth.signInWithCredential(credential)
-//            .addOnCompleteListener(this) { task ->
-//                if (task.isSuccessful) {
-//                    // Sign in success, update UI with the signed-in user's information
-//                    Log.d("MainActivity", "signInWithCredential:success")
-//                    auth.currentUser
-//                    val mainPageIntent = Intent(this, MainPageActivity::class.java)
-//                    startActivity(mainPageIntent)
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w("MainActivity", "signInWithCredential:failure", task.exception)
-//                }
-//            }
-//    }
-//
 }
