@@ -142,6 +142,14 @@ class AuthActivity : AppCompatActivity() {
                 registerEmailLayout.error = getString(R.string.error_email_in_use)
                 hideRegisterLoading()
             }
+            is FirebaseAuthWeakPasswordException -> {
+                registerPasswordLayout.error = getString(R.string.error_password_too_weak)
+                registerPasswordConfirmLayout.error = " "
+                if (registerPasswordConfirmLayout.childCount == 2) {
+                    registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
+                }
+                hideRegisterLoading()
+            }
             is FirebaseAuthInvalidCredentialsException -> {
                 if (user.isNew) {
                     registerEmailLayout.error = getString(R.string.error_invalid_email)
@@ -151,14 +159,6 @@ class AuthActivity : AppCompatActivity() {
                     loginEmailLayout.error = getString(R.string.error_failed_login)
                     hideLoginLoading()
                 }
-            }
-            is FirebaseAuthWeakPasswordException -> {
-                registerPasswordLayout.error = getString(R.string.error_password_too_weak)
-                registerPasswordConfirmLayout.error = " "
-                if (registerPasswordConfirmLayout.childCount == 2) {
-                    registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
-                }
-                hideRegisterLoading()
             }
             else -> Log.d("AuthActivity", "validateAuthUser: ${user.authException}")
         }
