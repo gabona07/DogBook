@@ -17,10 +17,10 @@ class UserRepository(private val sharedPref: SharedPreferences) {
                 if (registerTask.isSuccessful) {
                     val currentUser = registerTask.result?.user
                     currentUser?.let {
-                       authUser.value = AuthUser(it.uid, it.email, null)
+                       authUser.value = AuthUser(it.uid, it.email,true, null)
                     }
                 } else {
-                    authUser.value = AuthUser(null, null, registerTask.exception)
+                    authUser.value = AuthUser(null, null, true, registerTask.exception)
                 }
             }
     }
@@ -31,10 +31,10 @@ class UserRepository(private val sharedPref: SharedPreferences) {
                 if (loginTask.isSuccessful) {
                     val currentUser = loginTask.result?.user
                     currentUser?.let {
-                        authUser.value = AuthUser(it.uid, it.email, null)
+                        authUser.value = AuthUser(it.uid, it.email, false, null)
                     }
                 } else {
-                    authUser.value = AuthUser(null, null, loginTask.exception)
+                    authUser.value = AuthUser(null, null, false, loginTask.exception)
                 }
             }
     }
