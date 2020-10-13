@@ -8,6 +8,7 @@ import com.example.dogbook.model.Dog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_form.*
+import java.util.*
 
 class FormActivity : AppCompatActivity() {
 
@@ -31,9 +32,10 @@ class FormActivity : AppCompatActivity() {
     }
 
     private fun saveDogToDatabase(dogName: String,ownerName: String, location: String, dogPersonality: String, description: String) {
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val reference = database.getReference("/users/$uid")
-        val dog = Dog(uid, dogName, ownerName, location, dogPersonality, description)
+        val ownerUid = FirebaseAuth.getInstance().uid ?: ""
+        val dogUid = UUID.randomUUID().toString()
+        val reference = database.getReference("/users/$ownerUid/$dogUid")
+        val dog = Dog(ownerUid, dogUid, dogName, ownerName, location, dogPersonality, description)
         reference.setValue(dog)
     }
 }
