@@ -1,49 +1,21 @@
 package com.example.dogbook.repository
 
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
-import com.example.dogbook.model.AuthUser
+import com.example.dogbook.model.Dog
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
+import java.util.*
 
-class UserRepository(private val sharedPref: SharedPreferences) {
+class UserRepository {
 
-    private val firebaseAuth = FirebaseAuth.getInstance()
-    private val authUser = MutableLiveData<AuthUser>()
+    private val dogs = MutableLiveData<Dog>()
 
-    fun registerUser(email: String, password: String) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { registerTask ->
-                if (registerTask.isSuccessful) {
-                    val currentUser = registerTask.result?.user
-                    currentUser?.let {
-                       authUser.value = AuthUser(it.uid, it.email, null)
-                    }
-                } else {
-                    authUser.value = AuthUser(null, null, registerTask.exception)
-                }
-            }
-    }
+    private val database = FirebaseDatabase.getInstance()
 
-    fun loginUserWithEmailAndPassword(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { loginTask ->
-                if (loginTask.isSuccessful) {
-                    val currentUser = loginTask.result?.user
-                    currentUser?.let {
-                        authUser.value = AuthUser(it.uid, it.email, null)
-                    }
-                } else {
-                    authUser.value = AuthUser(null, null, loginTask.exception)
-                }
-            }
-    }
-
-    fun getAuthUser(): MutableLiveData<AuthUser> {
-        return this.authUser
-    }
-
-    fun getCurrentUser(): FirebaseUser? {
-        return firebaseAuth.currentUser
+    fun saveDogToDatabase(dog: Dog) {
+        dog.ownerUid = FirebaseAuth.getInstance().uid ?: ""
+        dog.dogUid = UUID.randomUUID().toString()
+        val reference = database.getReference("/users/$dog.ownerUid/$dog.dogUid")
+        reference.setValue(dog)
     }
 }

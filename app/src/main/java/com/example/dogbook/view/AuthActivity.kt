@@ -8,7 +8,7 @@ import android.view.View
 import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
-import com.example.dogbook.viewmodel.UserViewModel
+import com.example.dogbook.viewmodel.AuthenticationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -20,12 +20,13 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class AuthActivity : AppCompatActivity() {
 
-    private val userViewModel: UserViewModel by viewModel()
+    private val authenticationViewModel: AuthenticationViewModel by viewModel()
     private lateinit var googleSignInClient: GoogleSignInClient
     private val auth = FirebaseAuth.getInstance()
 
     companion object {
         const val RC_SIGN_IN = 101
+        const val AUTH_USER_KEY = "AUTH_USER_KEY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,7 @@ class AuthActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth)
         addFormOptionListener()
         loginForm.setTransitionListener(LoginTransitionListener)
-        userViewModel.getAuthUserData().observe(this, {
+        authenticationViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
         setupGoogleSignInOptions()
@@ -71,7 +72,7 @@ class AuthActivity : AppCompatActivity() {
             loginPassword.clearFocus()
             loginForm.setTransition(R.id.start, R.id.LoginFormStateEnd)
             loginForm.transitionToEnd()
-            userViewModel.loginUser(userEmail, userPassword)
+            authenticationViewModel.loginUser(userEmail, userPassword)
         }
     }
 
@@ -92,7 +93,7 @@ class AuthActivity : AppCompatActivity() {
             registerEmail.clearFocus()
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
-            userViewModel.registerUser(email, password)
+            authenticationViewModel.registerUser(email, password)
         }
     }
 
@@ -100,6 +101,7 @@ class AuthActivity : AppCompatActivity() {
         when(user.authException) {
             null -> {
                 val mainPageIntent = Intent(this, MainPageActivity::class.java)
+                mainPageIntent.putExtra(AUTH_USER_KEY, user )
                 startActivity(mainPageIntent)
                 finish()
             }

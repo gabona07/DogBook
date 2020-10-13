@@ -5,16 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.example.dogbook.viewmodel.UserViewModel
+import com.example.dogbook.viewmodel.AuthenticationViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SplashActivity : AppCompatActivity() {
 
-    private val userViewModel: UserViewModel by viewModel()
+    private val authenticationViewModel: AuthenticationViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val currentUser = userViewModel.getCurrentUser()
+        val currentUser = authenticationViewModel.getCurrentUser()
         Handler(Looper.getMainLooper()).postDelayed({
             if (currentUser == null) {
                 val intent = Intent(this, AuthActivity::class.java)

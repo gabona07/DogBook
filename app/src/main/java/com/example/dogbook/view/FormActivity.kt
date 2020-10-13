@@ -4,15 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.dogbook.R
+import com.example.dogbook.model.AuthUser
 import com.example.dogbook.model.Dog
+import com.example.dogbook.viewmodel.AuthenticationViewModel
+import com.example.dogbook.viewmodel.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_form.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class FormActivity : AppCompatActivity() {
 
-    val database = FirebaseDatabase.getInstance()
+    private val userViewModel: UserViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,15 +31,8 @@ class FormActivity : AppCompatActivity() {
         val description = formDescription.text.toString()
 
         if (dogName.isNotEmpty() && ownerName.isNotEmpty() && location.isNotEmpty() && dogPersonality.isNotEmpty() && description.isNotEmpty()) {
-            saveDogToDatabase(dogName, ownerName, location, dogPersonality, description)
+            val dog = Dog("", "", dogName, ownerName, location, dogPersonality, description)
+            userViewModel.saveDogToDatabase(dog)
         }
-    }
-
-    private fun saveDogToDatabase(dogName: String,ownerName: String, location: String, dogPersonality: String, description: String) {
-        val ownerUid = FirebaseAuth.getInstance().uid ?: ""
-        val dogUid = UUID.randomUUID().toString()
-        val reference = database.getReference("/users/$ownerUid/$dogUid")
-        val dog = Dog(ownerUid, dogUid, dogName, ownerName, location, dogPersonality, description)
-        reference.setValue(dog)
     }
 }
