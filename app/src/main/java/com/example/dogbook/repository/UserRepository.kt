@@ -1,12 +1,11 @@
 package com.example.dogbook.repository
 
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import com.example.dogbook.model.AuthUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class UserRepository(private val sharedPref: SharedPreferences) {
+class UserRepository {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val authUser = MutableLiveData<AuthUser>()

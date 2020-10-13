@@ -1,5 +1,6 @@
 package com.example.dogbook.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.dogbook.model.AuthUser
@@ -14,6 +15,10 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun loginUser(email: String, password: String) {
         repository.loginUserWithEmailAndPassword(email, password)
+    }
+
+    fun loginWithGoogle(idToken: String) {
+        Log.d("kaka", "loginWithGoogle: $idToken")
     }
 
     fun getAuthUserData(): LiveData<AuthUser> {
