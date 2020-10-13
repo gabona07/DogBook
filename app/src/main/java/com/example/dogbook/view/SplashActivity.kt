@@ -19,9 +19,13 @@ class SplashActivity : AppCompatActivity() {
             if (currentUser == null) {
                 val intent = Intent(this, AuthActivity::class.java)
                 startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                finish()
             } else {
                 val intent = Intent(this, MainPageActivity::class.java)
                 startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                finish()
             }
         }, 2000)
     }

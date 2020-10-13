@@ -66,7 +66,6 @@ class AuthActivity : AppCompatActivity() {
                 Log.d("AuthActivity", "onActivityResult: Google login failed: $e")
             }
         }
-
     }
 
     private fun addFormOptionListener() {
