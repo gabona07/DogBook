@@ -15,4 +15,7 @@
     <string name="owner_s_name">Owner\'s name</string>
     <string name="dog_s_personality">Dog\'s personality</string>
     <string name="location">Location</string>
+    <string name="add_dog">Add Dog</string>
+    <string name="description">Description</string>
+    <string name="about_dog">Tell us about your dog</string>
 </resources>
