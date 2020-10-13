@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.repository.AuthRepository
-import com.google.firebase.auth.FirebaseUser
 
 class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
@@ -24,7 +23,11 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
         return repository.getAuthUser()
     }
 
-    fun getCurrentUser(): FirebaseUser? {
+    fun getCurrentUserData(): LiveData<AuthUser?> {
         return repository.getCurrentUser()
+    }
+
+    fun checkForCurrentUser() {
+        repository.checkForCurrentUser()
     }
 }

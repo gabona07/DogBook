@@ -3,13 +3,13 @@ package com.example.dogbook.repository
 import androidx.lifecycle.MutableLiveData
 import com.example.dogbook.model.AuthUser
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthRepository {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val authUser = MutableLiveData<AuthUser>()
+    private val currentUser = MutableLiveData<AuthUser?>()
 
     fun registerUser(email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -54,11 +54,21 @@ class AuthRepository {
             }
     }
 
+    fun checkForCurrentUser() {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            currentUser.value = AuthUser(user.uid, user.email, false, null)
+        } else {
+            currentUser.value = null
+        }
+    }
+
     fun getAuthUser(): MutableLiveData<AuthUser> {
         return this.authUser
     }
 
-    fun getCurrentUser(): FirebaseUser? {
-        return firebaseAuth.currentUser
+    fun getCurrentUser(): MutableLiveData<AuthUser?> {
+        return currentUser
     }
+
 }
