@@ -13,5 +13,9 @@
     <dimen name="btn_separator_margin">16dp</dimen>
     <dimen name="btn_separator_padding">10dp</dimen>
     <dimen name="google_btn_margin">16dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
+    <dimen name="form_field_margin">24dp</dimen>
+    <dimen name="add_dog_button_margin">8dp</dimen>
+    <dimen name="form_image_max_height">120dp</dimen>
     <dimen name="confirm_password_margin">16dp</dimen>
 </resources>

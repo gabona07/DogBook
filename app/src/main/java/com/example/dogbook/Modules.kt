@@ -1,7 +1,9 @@
 package com.example.dogbook
 
 import com.example.dogbook.repository.AuthRepository
+import com.example.dogbook.repository.UserRepository
 import com.example.dogbook.viewmodel.AuthViewModel
+import com.example.dogbook.viewmodel.UserViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import org.koin.android.ext.koin.androidContext
@@ -22,4 +24,7 @@ val appModules = module {
     single { AuthRepository() }
 
     viewModel { AuthViewModel(get()) }
+
+    single { UserRepository() }
+    viewModel { UserViewModel(get()) }
 }
