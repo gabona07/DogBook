@@ -8,39 +8,64 @@ import android.view.View
 import com.example.dogbook.R
 import com.example.dogbook.model.AuthUser
 import com.example.dogbook.transitionlistener.LoginTransitionListener
-import com.example.dogbook.viewmodel.AuthenticationViewModel
+import com.example.dogbook.transitionlistener.RegisterTransitionListener
+import com.example.dogbook.viewmodel.AuthViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_auth.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class AuthActivity : AppCompatActivity() {
 
-    private val authenticationViewModel: AuthenticationViewModel by viewModel()
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private val auth = FirebaseAuth.getInstance()
+    private val authViewModel: AuthViewModel by viewModel()
+    private val googleSignInClient: GoogleSignInClient by inject()
 
     companion object {
-        const val RC_SIGN_IN = 101
-        const val AUTH_USER_KEY = "AUTH_USER_KEY"
+        private const val TAB_INDEX_KEY = "TAB_INDEX_KEY"
+        private const val RC_SIGN_IN = 101
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
         addFormOptionListener()
+        savedInstanceState?.let {
+            val currentTabPosition = it.getInt(TAB_INDEX_KEY)
+            formOptions.selectTab(formOptions.getTabAt(currentTabPosition))
+        }
         loginForm.setTransitionListener(LoginTransitionListener)
-        authenticationViewModel.getAuthUserData().observe(this, {
+        registerForm.setTransitionListener(RegisterTransitionListener)
+        authViewModel.getAuthUserData().observe(this, {
             validateAuthUser(it)
         })
-        setupGoogleSignInOptions()
-        googleSingInBtn.setOnClickListener { loginWithGoogle() }
         signInBtn.setOnClickListener { loginUser() }
+        googleSingInBtn.setOnClickListener { loginWithGoogle() }
         signUpBtn.setOnClickListener { registerUser() }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(TAB_INDEX_KEY, formOptions.selectedTabPosition)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let {
+                    authViewModel.loginWithGoogle(it.idToken)
+                }
+            } catch (e: ApiException) {
+                // TODO Display google login error
+                Log.d("AuthActivity", "onActivityResult: Google login failed: $e")
+            }
+        }
     }
 
     private fun addFormOptionListener() {
@@ -67,24 +92,32 @@ class AuthActivity : AppCompatActivity() {
     private fun loginUser() {
         val userEmail = loginEmail.text.toString()
         val userPassword = loginPassword.text.toString()
+        loginEmailLayout.isErrorEnabled = false
         if (userEmail.isNotEmpty() && userPassword.isNotEmpty()) {
             loginEmail.clearFocus()
             loginPassword.clearFocus()
-            loginForm.setTransition(R.id.start, R.id.LoginFormStateEnd)
-            loginForm.transitionToEnd()
-            authenticationViewModel.loginUser(userEmail, userPassword)
+            loginForm.transitionToState(R.id.loginFormStateEnd)
+            authViewModel.loginUser(userEmail, userPassword)
         }
+    }
+
+    private fun loginWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     private fun registerUser() {
         val email = registerEmail.text.toString()
         val password = registerPassword.text.toString()
         val confirmPassword = registerPasswordConfirm.text.toString()
+        registerEmailLayout.isErrorEnabled = false
+        registerPasswordLayout.isErrorEnabled = false
+        registerPasswordConfirmLayout.isErrorEnabled = false
         if (password != confirmPassword && email.isNotEmpty()) {
             registerEmail.clearFocus()
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
-            registerPasswordLayout.error = "Passwords don't match."
+            registerPasswordLayout.error = getString(R.string.error_password_mismatch)
             registerPasswordConfirmLayout.error = " "
             if (registerPasswordConfirmLayout.childCount == 2) {
                 registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
@@ -93,7 +126,8 @@ class AuthActivity : AppCompatActivity() {
             registerEmail.clearFocus()
             registerPassword.clearFocus()
             registerPasswordConfirm.clearFocus()
-            authenticationViewModel.registerUser(email, password)
+            registerForm.transitionToState(R.id.registerFormStateEnd)
+            authViewModel.registerUser(email, password)
         }
     }
 
@@ -101,79 +135,42 @@ class AuthActivity : AppCompatActivity() {
         when(user.authException) {
             null -> {
                 val mainPageIntent = Intent(this, MainPageActivity::class.java)
-                mainPageIntent.putExtra(AUTH_USER_KEY, user )
                 startActivity(mainPageIntent)
                 finish()
             }
             is FirebaseAuthUserCollisionException -> {
-                registerEmailLayout.error = getString(R.string.email_error)
-            }
-            is FirebaseAuthInvalidCredentialsException -> {
-                registerEmailLayout.error = getString(R.string.error_failed_login)
-                loginEmailLayout.error = getString(R.string.error_failed_login)
-                hideLoginLoading()
+                registerEmailLayout.error = getString(R.string.error_email_in_use)
+                hideRegisterLoading()
             }
             is FirebaseAuthWeakPasswordException -> {
-                registerPasswordLayout.error = getString(R.string.password_too_weak_error)
+                registerPasswordLayout.error = getString(R.string.error_password_too_weak)
                 registerPasswordConfirmLayout.error = " "
                 if (registerPasswordConfirmLayout.childCount == 2) {
                     registerPasswordConfirmLayout.getChildAt(1).visibility = View.GONE
                 }
+                hideRegisterLoading()
             }
-            else -> println("${user.authException}")
+            is FirebaseAuthInvalidCredentialsException -> {
+                if (user.isNew) {
+                    registerEmailLayout.error = getString(R.string.error_invalid_email)
+                    hideRegisterLoading()
+                }
+                else {
+                    loginEmailLayout.error = getString(R.string.error_failed_login)
+                    hideLoginLoading()
+                }
+            }
+            else -> Log.d("AuthActivity", "validateAuthUser: ${user.authException}")
         }
     }
 
     private fun hideLoginLoading() {
-        loginForm.setTransition(R.id.LoginBtnStateEnd, R.id.start)
+        loginForm.setTransition(R.id.loginBtnStateEnd, R.id.start)
         loginForm.transitionToEnd()
     }
 
-    private fun setupGoogleSignInOptions() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d("MainActivity", "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w("MainActivity", "Google sign in failed", e)
-            }
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("MainActivity", "signInWithCredential:success")
-                    auth.currentUser
-                    val mainPageIntent = Intent(this, MainPageActivity::class.java)
-                    startActivity(mainPageIntent)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("MainActivity", "signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-
-    private fun loginWithGoogle() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+    private fun hideRegisterLoading() {
+        registerForm.setTransition(R.id.registerBtnStateEnd, R.id.start)
+        registerForm.transitionToEnd()
     }
 }

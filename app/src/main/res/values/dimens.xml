@@ -6,8 +6,8 @@
     <dimen name="auth_form_padding_sides">40dp</dimen>
     <dimen name="auth_form_padding_top_bottom">20dp</dimen>
     <dimen name="edit_text_margin">8dp</dimen>
-    <dimen name="sign_in_btn_height">45dp</dimen>
-    <dimen name="sign_in_btn_margin_top">32dp</dimen>
+    <dimen name="auth_btn_height">45dp</dimen>
+    <dimen name="auth_btn_margin_top">32dp</dimen>
     <dimen name="auth_progressbar_size">55dp</dimen>
     <dimen name="separator_line_height">1dp</dimen>
     <dimen name="btn_separator_margin">16dp</dimen>
@@ -17,4 +17,5 @@
     <dimen name="form_field_margin">24dp</dimen>
     <dimen name="add_dog_button_margin">8dp</dimen>
     <dimen name="form_image_max_height">120dp</dimen>
+    <dimen name="confirm_password_margin">16dp</dimen>
 </resources>

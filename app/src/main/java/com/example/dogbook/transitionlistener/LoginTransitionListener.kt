@@ -19,14 +19,15 @@ object LoginTransitionListener : MotionLayout.TransitionListener {
     override fun onTransitionCompleted(motionLayout: MotionLayout?, currentState: Int) {
         motionLayout?.let {
             val signInBtn = it.findViewById<Button>(R.id.signInBtn)
-            if (currentState == R.id.LoginFormStateEnd) {
-                signInBtn.text = ""
-                it.setTransition(currentState, R.id.LoginBtnStateEnd)
-                it.transitionToEnd()
-            }
-            if (currentState == R.id.start) {
-                signInBtn.setText(R.string.sign_in_btn_text)
-                signInBtn.isClickable = true
+            when(currentState) {
+                R.id.loginFormStateEnd -> {
+                    signInBtn.text = ""
+                    it.transitionToState(R.id.loginBtnStateEnd)
+                }
+                R.id.start -> {
+                    signInBtn.setText(R.string.sign_in_btn_text)
+                    signInBtn.isClickable = true
+                }
             }
         }
     }

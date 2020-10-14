@@ -3,10 +3,9 @@ package com.example.dogbook.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.dogbook.model.AuthUser
-import com.example.dogbook.repository.AuthenticationRepository
-import com.google.firebase.auth.FirebaseUser
+import com.example.dogbook.repository.AuthRepository
 
-class AuthenticationViewModel(private val repository: AuthenticationRepository) : ViewModel() {
+class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
 
     fun registerUser(email: String, password: String) {
         repository.registerUser(email, password)
@@ -16,11 +15,19 @@ class AuthenticationViewModel(private val repository: AuthenticationRepository) 
         repository.loginUserWithEmailAndPassword(email, password)
     }
 
+    fun loginWithGoogle(idToken: String?) {
+        repository.loginWithGoogle(idToken)
+    }
+
     fun getAuthUserData(): LiveData<AuthUser> {
         return repository.getAuthUser()
     }
 
-    fun getCurrentUser(): FirebaseUser? {
+    fun getCurrentUserData(): LiveData<AuthUser?> {
         return repository.getCurrentUser()
+    }
+
+    fun checkForCurrentUser() {
+        repository.checkForCurrentUser()
     }
 }

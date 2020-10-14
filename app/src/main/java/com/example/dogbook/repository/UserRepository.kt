@@ -7,7 +7,6 @@ import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
 class UserRepository {
-
     private val dogs = MutableLiveData<Dog>()
 
     private val database = FirebaseDatabase.getInstance()
@@ -15,7 +14,7 @@ class UserRepository {
     fun saveDogToDatabase(dog: Dog) {
         dog.ownerUid = FirebaseAuth.getInstance().uid ?: ""
         dog.dogUid = UUID.randomUUID().toString()
-        val reference = database.getReference("/users/$dog.ownerUid/$dog.dogUid")
+        val reference = database.getReference("/users/${dog.ownerUid}/${dog.dogUid}")
         reference.setValue(dog)
     }
 }

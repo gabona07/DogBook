@@ -14,9 +14,9 @@ class MainPageActivity : AppCompatActivity() {
     }
 
     fun navigateToForm(view: View) {
-        val user = intent.getParcelableExtra<AuthUser>(AuthActivity.AUTH_USER_KEY)
+        val user = intent.getParcelableExtra<AuthUser>(FormActivity.AUTH_USER_KEY)
         val intent = Intent(this, FormActivity::class.java)
-        intent.putExtra(AuthActivity.AUTH_USER_KEY, user)
+        intent.putExtra(FormActivity.AUTH_USER_KEY, user)
         startActivity(intent)
     }
 }
