@@ -3,13 +3,13 @@ package com.example.dogbook.repository
 import androidx.lifecycle.MutableLiveData
 import com.example.dogbook.model.AuthUser
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
 class AuthRepository {
 
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val authUser = MutableLiveData<AuthUser>()
-    private val currentUser = MutableLiveData<AuthUser?>()
 
     fun registerUser(email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -17,10 +17,10 @@ class AuthRepository {
                 if (registerTask.isSuccessful) {
                     val currentUser = registerTask.result?.user
                     currentUser?.let {
-                       authUser.value = AuthUser(it.uid, it.email,true, null)
+                       authUser.value = AuthUser.OnSuccess(it.uid, it.email!!)
                     }
                 } else {
-                    authUser.value = AuthUser(null, null, true, registerTask.exception)
+                    authUser.value = AuthUser.OnError(registerTask.exception!!, false)
                 }
             }
     }
@@ -31,10 +31,10 @@ class AuthRepository {
                 if (loginTask.isSuccessful) {
                     val currentUser = loginTask.result?.user
                     currentUser?.let {
-                        authUser.value = AuthUser(it.uid, it.email, false, null)
+                        authUser.value = AuthUser.OnSuccess(it.uid, it.email!!)
                     }
                 } else {
-                    authUser.value = AuthUser(null, null, false, loginTask.exception)
+                    authUser.value = AuthUser.OnError(loginTask.exception!!, true)
                 }
             }
     }
@@ -46,29 +46,20 @@ class AuthRepository {
                 if (loginTask.isSuccessful) {
                     val currentUser = loginTask.result?.user
                     currentUser?.let {
-                        authUser.value = AuthUser(it.uid, it.email, false, null)
+                        authUser.value = AuthUser.OnSuccess(it.uid, it.email!!)
                     }
                 } else {
-                    authUser.value = AuthUser(null, null, false, loginTask.exception)
+                    authUser.value = AuthUser.OnError(loginTask.exception!!, true)
                 }
             }
-    }
-
-    fun checkForCurrentUser() {
-        val user = firebaseAuth.currentUser
-        if (user != null) {
-            currentUser.value = AuthUser(user.uid, user.email, false, null)
-        } else {
-            currentUser.value = null
-        }
     }
 
     fun getAuthUser(): MutableLiveData<AuthUser> {
         return this.authUser
     }
 
-    fun getCurrentUser(): MutableLiveData<AuthUser?> {
-        return currentUser
+    fun getCurrentUser(): FirebaseUser? {
+        return firebaseAuth.currentUser
     }
 
 }

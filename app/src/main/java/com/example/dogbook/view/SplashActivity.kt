@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
         }, 2000)
     }
 
-    private fun navigateToActivity(currentUser: AuthUser?) {
+    private fun navigateToActivity(currentUser: AuthUser.OnSuccess?) {
         if (currentUser == null) {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
@@ -31,6 +31,7 @@ class SplashActivity : AppCompatActivity() {
             finish()
         } else {
             val intent = Intent(this, MainPageActivity::class.java)
+            intent.putExtra(MainPageActivity.CURRENT_USER_INTENT_KEY, currentUser)
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
