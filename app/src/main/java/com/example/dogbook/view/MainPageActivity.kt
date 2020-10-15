@@ -16,6 +16,10 @@ import kotlin.math.abs
 
 class MainPageActivity : AppCompatActivity() {
 
+    companion object {
+        const val CURRENT_USER_INTENT_KEY = "CURRENT_USER_INTENT_KEY"
+    }
+
     private val adapter = ViewPagerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +29,9 @@ class MainPageActivity : AppCompatActivity() {
     }
 
     fun navigateToForm(view: View) {
-        val user = intent.getParcelableExtra<AuthUser>(FormActivity.AUTH_USER_KEY)
+        val user = intent.getParcelableExtra<AuthUser.OnSuccess>(CURRENT_USER_INTENT_KEY)
         val intent = Intent(this, FormActivity::class.java)
-        intent.putExtra(FormActivity.AUTH_USER_KEY, user)
+        intent.putExtra(CURRENT_USER_INTENT_KEY, user)
         startActivity(intent)
     }
 
