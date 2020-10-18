@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -26,6 +27,7 @@ class MainPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_page)
         viewPagerInit()
+        addMenuItemListener()
     }
 
     fun navigateToForm(view: View) {
@@ -56,5 +58,19 @@ class MainPageActivity : AppCompatActivity() {
             Dog("", "", "Kora", "", "", "", ""),
             Dog("", "", "Mex", "", "", "", "")
         ))
+    }
+
+    private fun addMenuItemListener() {
+        mainToolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.actionSearch -> {
+                    val searchView = it.actionView as SearchView
+                    searchView.queryHint = getString(R.string.search_view_hint)
+                    true
+                }
+
+                else -> false
+            }
+        }
     }
 }

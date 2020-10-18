@@ -130,21 +130,22 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_dog"
         android:layout_margin="@dimen/add_dog_button_margin"
+        android:background="@drawable/auth_button"
         android:onClick="validateData"
+        android:text="@string/add_dog"
+        android:textColor="@color/colorTextLight"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/auth_button"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/dogSleep"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:maxHeight="@dimen/form_image_max_height"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/slep" />
