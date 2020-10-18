@@ -5,14 +5,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorTextHint</item>
         <item name="colorControlNormal">@color/colorSecondary</item>
-        <item name="hintTextColor">@color/colorSecondary</item>
-        <item name="android:textColorHint">@color/colorSecondary</item>
+        <item name="hintTextColor">@color/colorTextHint</item>
+        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="android:editTextColor">@color/colorTextLight</item>
     </style>
 
     <style name="SplashStyle" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 

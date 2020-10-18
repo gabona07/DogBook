@@ -40,7 +40,10 @@ class AuthActivity : AppCompatActivity() {
         loginForm.setTransitionListener(LoginTransitionListener)
         registerForm.setTransitionListener(RegisterTransitionListener)
         authViewModel.getAuthUserData().observe(this, {
-            validateAuthUser(it)
+            when(it) {
+                is AuthUser.OnSuccess -> navigateToMainPage(it)
+                is AuthUser.OnError -> displayError(it)
+            }
         })
         signInBtn.setOnClickListener { loginUser() }
         googleSingInBtn.setOnClickListener { loginWithGoogle() }
@@ -131,13 +134,15 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateAuthUser(user: AuthUser) {
-        when(user.authException) {
-            null -> {
-                val mainPageIntent = Intent(this, MainPageActivity::class.java)
-                startActivity(mainPageIntent)
-                finish()
-            }
+    private fun navigateToMainPage(currentUser: AuthUser.OnSuccess) {
+        val mainPageIntent = Intent(this, MainPageActivity::class.java)
+        intent.putExtra(MainPageActivity.CURRENT_USER_INTENT_KEY, currentUser)
+        startActivity(mainPageIntent)
+        finish()
+    }
+
+    private fun displayError(error: AuthUser.OnError) {
+        when(error.authException) {
             is FirebaseAuthUserCollisionException -> {
                 registerEmailLayout.error = getString(R.string.error_email_in_use)
                 hideRegisterLoading()
@@ -151,16 +156,16 @@ class AuthActivity : AppCompatActivity() {
                 hideRegisterLoading()
             }
             is FirebaseAuthInvalidCredentialsException -> {
-                if (user.isNew) {
-                    registerEmailLayout.error = getString(R.string.error_invalid_email)
-                    hideRegisterLoading()
-                }
-                else {
+                if (error.isLoginAttempt) {
                     loginEmailLayout.error = getString(R.string.error_failed_login)
                     hideLoginLoading()
                 }
+                else {
+                    registerEmailLayout.error = getString(R.string.error_invalid_email)
+                    hideRegisterLoading()
+                }
             }
-            else -> Log.d("AuthActivity", "validateAuthUser: ${user.authException}")
+            else -> Log.d("AuthActivity", "validateAuthUser: ${error.authException}")
         }
     }
 
