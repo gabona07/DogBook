@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">DogBook</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="sign_in_btn_text">Sign In</string>
+    <string name="btn_separator_text">OR</string>
+    <string name="option_sign_in">Sign in</string>
+    <string name="option_sign_up">Sign Up</string>
+    <string name="sign_up_btn_text">Sign Up</string>
+    <string name="password_too_weak_error">Password is too weak.</string>
+    <string name="email_error">Email is already in use.</string>
+    <string name="dog_s_name">Dog\'s name</string>
+    <string name="owner_s_name">Owner\'s name</string>
+    <string name="dog_s_personality">Dog\'s personality</string>
+    <string name="location">Location</string>
+    <string name="add_dog">Add Dog</string>
+    <string name="description">Description</string>
+    <string name="about_dog">Tell us about your dog</string>
+    <string name="error_failed_login">Invalid Username or Password!</string>
+    <string name="error_password_too_weak">Password is too weak.</string>
+    <string name="error_email_in_use">Email is already in use.</string>
+    <string name="error_password_mismatch">Passwords don\'t match.</string>
+    <string name="error_invalid_email">Invalid email</string>
+    <string name="search_view_hint">Find people...</string>
 </resources>

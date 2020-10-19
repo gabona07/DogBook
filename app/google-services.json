@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "696005727473",
+    "firebase_url": "https://dogbook-b8dc4.firebaseio.com",
+    "project_id": "dogbook-b8dc4",
+    "storage_bucket": "dogbook-b8dc4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696005727473:android:f6c9c64d8872f81e1c4550",
+        "android_client_info": {
+          "package_name": "com.example.dogbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696005727473-oph92p4tbgei6253ho26mrepu1ogf9sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjNJxRq7Niua59n4I4O2dX9-bHZ9DJhho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696005727473-oph92p4tbgei6253ho26mrepu1ogf9sm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
